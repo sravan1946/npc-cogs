@@ -157,10 +157,10 @@ class JustCore(ThemesMeta):
             emb["embed"]["description"] = box(signature, lang="properties")
 
             if final_perms := get_perms(command):
-                emb["fields"].append(EmbedField("Permissions", final_perms, False))
+                emb["fields"].append(EmbedField("**__Permissions__**", final_perms, False))
 
             if cooldowns := get_cooldowns(command):
-                emb["fields"].append(EmbedField("Cooldowns:", "\n".join(cooldowns), False))
+                emb["fields"].append(EmbedField("**__Cooldowns__**:", "\n".join(cooldowns), False))
 
             if subcommands:
 
