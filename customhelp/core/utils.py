@@ -29,7 +29,7 @@ def emoji_converter(bot, emoji):
 def shorten_line(a_line: str) -> str:
     if len(a_line) < 70:  # embed max width needs to be lower
         return a_line
-    return a_line[:67] + "..."
+    return a_line[:67] + "...**"
 
 
 # Add permissions
