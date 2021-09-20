@@ -167,10 +167,10 @@ class JustCore(ThemesMeta):
                 def shorten_line(a_line: str) -> str:
                     if len(a_line) < 70:  # embed max width needs to be lower
                         return a_line
-                    return a_line[:67] + "..."
+                    return a_line[:67] + "...**"
 
                 subtext = "\n".join(
-                    shorten_line(f"**{name}** {command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name}`: **{command.format_shortdoc_for_context(ctx)}**")
                     for name, command in sorted(subcommands.items())
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
