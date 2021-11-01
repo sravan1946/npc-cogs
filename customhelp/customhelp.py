@@ -1,4 +1,4 @@
-import asyncio
+﻿import asyncio
 import json
 import re
 from collections import Counter, defaultdict
@@ -85,6 +85,7 @@ class CustomHelp(commands.Cog):
                 "timeout": 120,
                 "replies": True,
                 "buttons": False,
+                "deletemessage": False,
                 "arrows": {
                     "right": "\N{BLACK RIGHTWARDS ARROW}\N{VARIATION SELECTOR-16}",
                     "left": "\N{LEFTWARDS BLACK ARROW}\N{VARIATION SELECTOR-16}",
@@ -261,12 +262,13 @@ class CustomHelp(commands.Cog):
             "timeout": "Timeout(secs)",
             "replies": "Use replies",
             "buttons": "Use buttons",
+            "deletemessage": "Delete user msg",
         }
         other_settings = []
         # url doesnt exist now, that's why the check. sorry guys.
         for i, j in settings.items():
             if i in setting_mapping:
-                other_settings.append(f"`{setting_mapping[i]:<13}`: {j}")
+                other_settings.append(f"`{setting_mapping[i]:<15}`: {j}")
         val = await self.config.theme()
         val = "\n".join([f"`{i:<10}`: " + (j if j else "default") for i, j in val.items()])
         emb = discord.Embed(
@@ -767,7 +769,7 @@ class CustomHelp(commands.Cog):
         for page in pagify(text, page_length=1985, shorten_by=0):
             await ctx.send(box(page, lang="yaml"))
 
-    @chelp.group()
+    @chelp.group(name="settings",aliases=["setting"])
     async def settings(self, ctx):
         """Change various help settings"""
 
@@ -817,6 +819,13 @@ class CustomHelp(commands.Cog):
             await ctx.send(f"Sucessfully set timeout to {wait}")
         else:
             await ctx.send("Timeout must be atleast 20 seconds")
+
+    @settings.command(aliases=["deleteusermessage"])
+    async def deletemessage(self, ctx, toggle: bool):
+        """Delete the user message that started the help menu.
+        Note: This only works if the bot has permissions to delete the user message, otherwise it's supressed"""
+        await self.config.settings.deletemessage.set(toggle)
+        await ctx.send(f"Sucessfully set delete user toggle to {toggle}")
 
     @settings.command(aliases=["arrow"])
     async def arrows(self, ctx, *, correct_txt=None):
