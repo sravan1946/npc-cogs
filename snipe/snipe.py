@@ -240,7 +240,6 @@ class Snipe(commands.Cog):
                     entries=[msg for msg in reversed(self.deletecache[channel.id]) if msg.content],
                     per_page=1,
                 ),
-                delete_message_after=True,
             )
             await menu.start(ctx)
             self.notrack.add(menu.message.id)
