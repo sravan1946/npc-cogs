@@ -270,7 +270,6 @@ class Snipe(commands.Cog):
                     entries=entries,
                     per_page=1,
                 ),
-                delete_message_after=True,
             )
             await menu.start(ctx)
             self.notrack.add(menu.message.id)
