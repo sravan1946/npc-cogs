@@ -17,6 +17,8 @@ class Speak(commands.Cog):
         with open(data_manager.bundled_data_path(self) / "sadme.txt", encoding="utf8") as fp:
             self.sadme_list = fp.read().splitlines()
 
+    @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
     async def tell(self, ctx, channel: typing.Optional[discord.TextChannel], *, sentence: str):
         """Tells the given text as the yourself but with a bot tag"""
@@ -32,6 +34,8 @@ class Speak(commands.Cog):
             content=sentence,
         )
 
+    @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
     async def tellas(
         self,
@@ -55,6 +59,7 @@ class Speak(commands.Cog):
         )
 
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
     async def telluser(
         self,
@@ -87,6 +92,7 @@ class Speak(commands.Cog):
             await ctx.send_help()
 
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.group(invoke_without_command=False)
     async def says(self, ctx):
         """Says Stuff for the user"""
