@@ -17,6 +17,7 @@ class Speak(commands.Cog):
             self.sadme_list = fp.read().splitlines()
 
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
     async def tell(self, ctx, *, sentence: str):
         """Tells the given text as the yourself but with a bot tag"""
@@ -29,6 +30,7 @@ class Speak(commands.Cog):
         )
 
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
     async def tellas(self, ctx, mention: discord.Member, *, sentence: str):
         """Tells the given text as the mentioned users"""
@@ -41,6 +43,7 @@ class Speak(commands.Cog):
         )
 
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
     async def telluser(self, ctx, username: str, avatar: str, *, sentence: str):
         """Says the given text with the specified name and avatar"""
@@ -61,6 +64,7 @@ class Speak(commands.Cog):
             await ctx.send_help()
 
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
     @commands.group(invoke_without_command=False)
     async def says(self, ctx):
         """Says Stuff for the user"""
