@@ -127,7 +127,7 @@ class Snipe(commands.Cog):
     async def snipe(
         self,
         ctx: commands.Context,
-        channel: discord.TextChannel = None,
+        channel: Optional[discord.TextChannel],
         index: int = None,
     ):
         """
