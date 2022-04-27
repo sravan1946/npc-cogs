@@ -131,11 +131,11 @@ class Speak(commands.Cog):
                         self.cache[channel.id] = hook
                         break
                 else:
-                    hook = await channel.create_webhook(name="red_bot_hook_" + str(channel.id))
+                    hook = await channel.create_webhook(name=f"red_bot_hook_{str(channel.id)}")
             else:
                 hook = self.cache[channel.id]
         except discord.NotFound:  # Probably user deleted the hook
-            hook = await channel.create_webhook(name="red_bot_hook_" + str(channel.id))
+            hook = await channel.create_webhook(name=f"red_bot_hook_{str(channel.id)}")
         return hook
 
     async def invalid_permissions_message(
