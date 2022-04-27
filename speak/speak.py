@@ -17,11 +17,8 @@ class Speak(commands.Cog):
         with open(data_manager.bundled_data_path(self) / "sadme.txt", encoding="utf8") as fp:
             self.sadme_list = fp.read().splitlines()
 
-<<<<<<< HEAD
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     @commands.admin_or_permissions(manage_webhooks=True)
-=======
->>>>>>> ce82df2578769ff2170d30e1080e4ef4dfa6db6b
     @commands.command()
     async def tell(self, ctx, channel: typing.Optional[discord.TextChannel], *, sentence: str):
         """Tells the given text as the yourself but with a bot tag"""
@@ -37,11 +34,8 @@ class Speak(commands.Cog):
             content=sentence,
         )
 
-<<<<<<< HEAD
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     @commands.admin_or_permissions(manage_webhooks=True)
-=======
->>>>>>> ce82df2578769ff2170d30e1080e4ef4dfa6db6b
     @commands.command()
     async def tellas(
         self,
@@ -137,11 +131,11 @@ class Speak(commands.Cog):
                         self.cache[channel.id] = hook
                         break
                 else:
-                    hook = await channel.create_webhook(name="red_bot_hook_" + str(channel.id))
+                    hook = await channel.create_webhook(name=f"red_bot_hook_{str(channel.id)}")
             else:
                 hook = self.cache[channel.id]
         except discord.NotFound:  # Probably user deleted the hook
-            hook = await channel.create_webhook(name="red_bot_hook_" + str(channel.id))
+            hook = await channel.create_webhook(name=f"red_bot_hook_{str(channel.id)}")
         return hook
 
     async def invalid_permissions_message(
