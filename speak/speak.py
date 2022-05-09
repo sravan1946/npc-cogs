@@ -37,6 +37,21 @@ class Speak(commands.Cog):
     @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     @commands.admin_or_permissions(manage_webhooks=True)
     @commands.command()
+    async def telld(self, ctx, channel: typing.Optional[discord.TextChannel], *, sentence: str):
+        """Tells the given text as the yourself but with a bot tag without deleteing the invocation message"""
+        if not (channel := await self.invalid_permissions_message(ctx, channel)):
+            return
+
+        hook = await self.get_hook(channel)
+        await hook.send(
+            username=ctx.author.display_name,
+            avatar_url=ctx.author.avatar_url,
+            content=sentence,
+        )
+
+    @checks.bot_has_permissions(manage_webhooks=True, manage_messages=True)
+    @commands.admin_or_permissions(manage_webhooks=True)
+    @commands.command()
     async def tellas(
         self,
         ctx,
