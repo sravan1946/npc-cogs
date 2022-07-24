@@ -34,6 +34,7 @@ class Google(Yandex, commands.Cog):
         self.options = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
             "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "upgrade-insecure-requests": "1",
         }
         self.link_regex = re.compile(
             r"https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*(?:\.png|\.jpe?g|\.gif))"
