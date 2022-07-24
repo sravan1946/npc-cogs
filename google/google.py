@@ -36,7 +36,8 @@ class Google(Yandex, commands.Cog):
             "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
             "upgrade-insecure-requests": "1",
             "sec-ch-arch": "x86",
-            "accept-encoding": "gzip, deflate, br",
+            "accept-encoding": "gzip, deflate",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         }
         self.link_regex = re.compile(
             r"https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*(?:\.png|\.jpe?g|\.gif))"
