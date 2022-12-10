@@ -119,7 +119,7 @@ class MinimalHelp(ThemesMeta):
             splitted = command_help.split("\n\n")
             name = splitted[0]
             value = "\n".join(splitted[1:])
-        full_text += "**Usage:** `" + signature + "`\n"
+        full_text += f"**Usage:** `{signature}" + "`\n"
 
         if aliases := get_aliases(command, ctx.invoked_with):
             full_text += "**Aliases:** " + ",".join(aliases) + "\n"
@@ -142,10 +142,7 @@ class MinimalHelp(ThemesMeta):
                 for name, command in sorted(subcommands.items())
             )
             for i, page in enumerate(pagify(subtext, shorten_by=0)):
-                if i == 0:
-                    title = _("**__Subcommands:__**")
-                else:
-                    title = ""
+                title = _("**__Subcommands:__**") if i == 0 else ""
                 full_text += f"{title}{page}"
         text_no = list(pagify(full_text))
         await self.send_pages(

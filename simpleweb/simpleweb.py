@@ -45,14 +45,14 @@ class SimpleWeb(commands.Cog):
         # Remove older routes
         for path in self.routes:
             for index, resource in enumerate(self.bot.rpc.app.router._resources):
-                if isinstance(resource, StaticResource):
-                    if resource._prefix == path:
-                        self.bot.rpc.app.router._resources.pop(index)
-                        break
-                elif resource._path == path:
+                if (
+                    isinstance(resource, StaticResource)
+                    and resource._prefix == path
+                    or not isinstance(resource, StaticResource)
+                    and resource._path == path
+                ):
                     self.bot.rpc.app.router._resources.pop(index)
                     break
-
         self.bot.rpc.app.router._frozen = False
         self.bot.rpc.app.add_routes(
             [getattr(web, obj[0])(k, obj[1]) for k, obj in self.routes.items()]
@@ -77,8 +77,7 @@ class SimpleWeb(commands.Cog):
 
     #### ROUTES SECTION ####
     async def help_commands(self, request):
-        response = aiohttp_jinja2.render_template("commands.jinja2", request, self.cache)
-        return response
+        return aiohttp_jinja2.render_template("commands.jinja2", request, self.cache)
 
     async def hello(self, request) -> web.Response:
         return web.Response(text="Pong! Site working")

@@ -40,7 +40,7 @@ class Single:
                 content=f"{ctx.author.display_name} started a typing test: \n Let's Start in {i}"
             )
         await asyncio.sleep(1)
-        await msg.edit(content="```" + nocheats(a_string) + "```")
+        await msg.edit(content=f"```{nocheats(a_string)}```")
         start = time.perf_counter()
         try:
             b_string = (

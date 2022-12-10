@@ -30,7 +30,7 @@ class Mixture(ThemesMeta):
                             ) + f"**{cat.name.capitalize()}:**"
                         else:
                             title = EMPTY_STRING
-                        emb["fields"].append(EmbedField(title, "> " + page, False))
+                        emb["fields"].append(EmbedField(title, f"> {page}", False))
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
             if get_pages:
                 return pages
@@ -98,7 +98,7 @@ class Mixture(ThemesMeta):
             emb = await self.embed_template(help_settings, ctx)
 
             if description := obj.format_help_for_context(ctx):
-                emb["embed"]["description"] = "**" + description + "**"
+                emb["embed"]["description"] = f"**{description}**"
 
             for name, command in sorted(coms.items()):
                 emb["fields"].append(

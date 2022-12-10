@@ -41,12 +41,7 @@ class MenuMixin:
                 raise RuntimeError("Function must be a coroutine")
         current_page = pages[page]
 
-        if not message:
-            if isinstance(current_page, discord.Embed):
-                message = await ctx.send(embed=current_page)
-            else:
-                message = await ctx.send(current_page)
-        else:
+        if message:
             try:
                 if isinstance(current_page, discord.Embed):
                     await message.edit(embed=current_page)
@@ -55,6 +50,10 @@ class MenuMixin:
             except discord.NotFound:
                 return
 
+        elif isinstance(current_page, discord.Embed):
+            message = await ctx.send(embed=current_page)
+        else:
+            message = await ctx.send(current_page)
         try:
             predicate = (
                 lambda payload: not ctx.author.bot
@@ -73,7 +72,7 @@ class MenuMixin:
                 else:
                     raise RuntimeError
             except (discord.Forbidden, RuntimeError):  # cannot remove all reactions
-                for key in controls.keys():
+                for key in controls:
                     try:
                         await message.remove_reaction(key, ctx.bot.user)
                     except discord.Forbidden:

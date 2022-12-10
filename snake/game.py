@@ -27,7 +27,7 @@ def get_point(size, board):
 class Game:
     def __init__(self, size):
         self.size = size
-        self.board = [[0 for i in range(size)] for j in range(size)]
+        self.board = [[0 for _ in range(size)] for _ in range(size)]
         self.snake = [get_point(size - 2, self.board)]
         self.snake.append(self.snake[0])
         self.snake[1] = (self.snake[1][0], self.snake[1][1] - 1)
@@ -77,15 +77,14 @@ class Game:
                 self.score += 1
                 if self.make_fruit():
                     return True
-        else:
-            if self.board[self.snake[0][0]][new] == 0:
-                self.snake.insert(0, [self.snake[0][0], new])
-                rm = self.snake.pop(-1)
-                self.board[rm[0]][rm[1]] = 0
+        elif self.board[self.snake[0][0]][new] == 0:
+            self.snake.insert(0, [self.snake[0][0], new])
+            rm = self.snake.pop(-1)
+            self.board[rm[0]][rm[1]] = 0
+            return True
+        elif self.board[self.snake[0][0]][new] == 1:
+            self.snake.insert(0, [self.snake[0][0], new])
+            self.score += 1
+            if self.make_fruit():
                 return True
-            elif self.board[self.snake[0][0]][new] == 1:
-                self.snake.insert(0, [self.snake[0][0], new])
-                self.score += 1
-                if self.make_fruit():
-                    return True
         return False

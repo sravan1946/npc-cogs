@@ -316,9 +316,7 @@ class Google(Yandex, commands.Cog):
     async def reverse(self, ctx, *, url: str = None):
         """Attach or paste the url of an image to reverse search, or reply to a message which has the image/embed with the image"""
         isnsfw = nsfwcheck(ctx)
-        if query := get_query(ctx, url):
-            pass
-        else:
+        if not (query := get_query(ctx, url)):
             return await ctx.send_help()
 
         encoded = {
@@ -330,10 +328,7 @@ class Google(Yandex, commands.Cog):
         }
 
         async with ctx.typing():
-            async with self.session.get(
-                "https://www.google.com/searchbyimage?" + urlencode(encoded),
-                headers=self.options,
-            ) as resp:
+            async with self.session.get(f"https://www.google.com/searchbyimage?{urlencode(encoded)}", headers=self.options) as resp:
                 text = await resp.read()
                 redir_url = resp.url
             prep = functools.partial(self.reverse_search, text)
@@ -454,8 +449,7 @@ class Google(Yandex, commands.Cog):
         )
         links = self.link_regex.findall(html)
         ind = 0
-        count = 0
-        while count <= 10:  # first 10 should be enough for the google icons
+        for _ in range(11):
             for remove in excluded_domains:
                 if not links:
                     return [], {}
@@ -464,5 +458,4 @@ class Google(Yandex, commands.Cog):
                     break
             else:
                 ind += 1
-            count += 1
         return links, {}

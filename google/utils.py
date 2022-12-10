@@ -40,10 +40,7 @@ def check_url(url: str):
 
 
 def get_query(ctx, url):
-    query = None
-    if resp := reply(ctx):
-        query = get_url(resp)
-
+    query = get_url(resp) if (resp := reply(ctx)) else None
     # TODO More work on this to shorten code.
     if not query or not check_url(query):
         if query := get_url(ctx.message, check=True):
@@ -150,7 +147,7 @@ def get_card(soup, final, kwargs):
             return
         elif card.find("div", "lu_map_section"):
             if img := re.search(r"\((.*)\)", h2t(str(card)).replace("\n", "")):
-                kwargs["image"] = "https://www.google.com" + img[1]
+                kwargs["image"] = f"https://www.google.com{img[1]}"
                 return
         else:
             # time card
@@ -198,13 +195,13 @@ def get_card(soup, final, kwargs):
         if word := card.find("div", class_="ya2TWb"):
             if sup := word.find("sup"):
                 sup.decompose()
-            final_text += "`" + word.text + "`"
+            final_text += f"`{word.text}`"
 
         if pronounciate := card.find("div", class_="S23sjd"):
-            final_text += "   |   " + pronounciate.text
+            final_text += f"   |   {pronounciate.text}"
 
         if type_ := card.find("span", class_="YrbPuc"):
-            final_text += "   |   " + type_.text + "\n\n"
+            final_text += f"   |   {type_.text}" + "\n\n"
 
         if definition := card.find("div", class_="LTKOO sY7ric"):
             if remove_flex_row := definition.find(class_="bqVbBf jfFgAc CqMNyc"):

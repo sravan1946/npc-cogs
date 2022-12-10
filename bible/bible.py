@@ -42,7 +42,7 @@ class Bible(commands.Cog):
         raw = group_embed_fields(fields)
         size = len(raw)
         for i, group in enumerate(raw, 1):
-            emb = discord.Embed(title="Search Results for " + title, colour=emb_color)
+            emb = discord.Embed(title=f"Search Results for {title}", colour=emb_color)
             emb.set_footer(
                 text=f"Version: {version} | Powered by Biblegateway.com | Page {i}/{size}"
             )

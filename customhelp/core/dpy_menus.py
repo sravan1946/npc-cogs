@@ -93,7 +93,7 @@ class ReplyMenus(BaseMenu, inherit_buttons=False):
         kwargs = {"allowed_mentions": discord.AllowedMentions(replied_user=False)}
         value = await discord.utils.maybe_coroutine(self._source.format_page, self, page)
         if isinstance(value, dict):
-            kwargs.update(value)
+            kwargs |= value
         elif isinstance(value, str):
             kwargs["content"] = value
         elif isinstance(value, discord.Embed):

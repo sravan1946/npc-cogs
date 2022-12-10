@@ -21,7 +21,9 @@ class NadekoHelp(ThemesMeta):
             for i, vals in enumerate(pagify(cat_titles, page_length=1000)):
                 emb["fields"].append(
                     EmbedField(
-                        (_("List of Categories") if i < 1 else EMPTY_STRING + " "), vals, False
+                        _("List of Categories") if i < 1 else f"{EMPTY_STRING} ",
+                        vals,
+                        False,
                     )
                 )
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)

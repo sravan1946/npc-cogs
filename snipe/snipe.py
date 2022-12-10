@@ -114,12 +114,11 @@ class Snipe(commands.Cog):
         user_perms = channel.permissions_for(ctx.author)
         if user_perms.read_messages and user_perms.read_message_history:
             return True
-        else:
-            await ctx.reply(
-                f"{ctx.author.name}, you don't have read access to {channel.mention}",
-                mention_author=False,
-            )
-            return False
+        await ctx.reply(
+            f"{ctx.author.name}, you don't have read access to {channel.mention}",
+            mention_author=False,
+        )
+        return False
 
     @commands.guild_only()
     @commands.group(invoke_without_command=True)
@@ -171,13 +170,12 @@ class Snipe(commands.Cog):
         # TODO remove redundant code
         if self.deletecache[ctx.channel.id]:
             lower_text = text.lower()
-            user_msgs = [
+            if user_msgs := [
                 msg
                 for msg in reversed(self.deletecache[ctx.channel.id])
                 if (msg.content and lower_text in msg.content.lower())
                 or (msg.embed and lower_text in str(msg.embed.to_dict()).lower())
-            ]
-            if user_msgs:
+            ]:
                 menu = menus.MenuPages(
                     source=MsgSource(
                         template_emb=discord.Embed(color=await ctx.embed_color()),
@@ -209,12 +207,11 @@ class Snipe(commands.Cog):
         if not pre_check:
             return
         if self.deletecache[channel.id]:
-            user_msgs = [
+            if user_msgs := [
                 msg
                 for msg in reversed(self.deletecache[channel.id])
                 if msg.content and msg.author.id == user.id
-            ]
-            if user_msgs:
+            ]:
                 menu = menus.MenuPages(
                     source=MsgSource(
                         template_emb=discord.Embed(color=await ctx.embed_color()),
@@ -227,7 +224,7 @@ class Snipe(commands.Cog):
                 if len(user_msgs) > 1:
                     self.notrack.add(menu.message.id)
             else:
-                await ctx.send("No snipe'd messages found for the user " + str(user))
+                await ctx.send(f"No snipe'd messages found for the user {str(user)}")
         else:
             await ctx.send("Nothing to snipe")
 
@@ -262,8 +259,9 @@ class Snipe(commands.Cog):
         pre_check = await self.pre_check_perms(ctx, channel)
         if not pre_check:
             return
-        entries = [msg for msg in reversed(self.deletecache[channel.id]) if msg.content]
-        if entries:
+        if entries := [
+            msg for msg in reversed(self.deletecache[channel.id]) if msg.content
+        ]:
             menu = menus.MenuPages(
                 source=MsgSource(
                     template_emb=discord.Embed(color=await ctx.embed_color()),
@@ -327,17 +325,16 @@ class Snipe(commands.Cog):
         if not pre_check:
             return
         if self.editcache[channel.id]:
-            user_msgs = [
+            if user_msgs := [
                 msg
                 for msg in reversed(self.editcache[channel.id])
                 if msg.content and msg.author.id == user.id
-            ]
-            if user_msgs:
+            ]:
                 menu = HorizontalEditMenus(source=user_msgs, delete_message_after=True)
                 await menu.start(ctx)
                 self.notrack.add(menu.message.id)
             else:
-                await ctx.send("No edit-sniped messages found for the user " + str(user))
+                await ctx.send(f"No edit-sniped messages found for the user {str(user)}")
         else:
             await ctx.send("Nothing to snipe")
 
@@ -350,8 +347,9 @@ class Snipe(commands.Cog):
         pre_check = await self.pre_check_perms(ctx, channel)
         if not pre_check:
             return
-        entries = [msg for msg in reversed(self.editcache[channel.id]) if msg.content]
-        if entries:
+        if entries := [
+            msg for msg in reversed(self.editcache[channel.id]) if msg.content
+        ]:
             menu = HorizontalEditMenus(
                 source=entries,
                 delete_message_after=True,
@@ -378,15 +376,14 @@ class Snipe(commands.Cog):
         """Ignore/Unignore a channel for sniping"""
         async with self.config.guild_from_id(ctx.guild.id).ignored_channels() as ignored_channels:
             if toggle:
-                if channel.id not in ignored_channels:
-                    ignored_channels.append(channel.id)
-                else:
-                    return await ctx.send("Channel already ignored")
-            else:
                 if channel.id in ignored_channels:
-                    ignored_channels.remove(channel.id)
+                    return await ctx.send("Channel already ignored")
                 else:
-                    return await ctx.send("Channel already unignored")
+                    ignored_channels.append(channel.id)
+            elif channel.id in ignored_channels:
+                ignored_channels.remove(channel.id)
+            else:
+                return await ctx.send("Channel already unignored")
         await ctx.send("Channel " + ("added to" if toggle else "removed from") + " ignore list")
 
     @snipeset_ignore.command(name="server")
@@ -423,10 +420,7 @@ class Snipe(commands.Cog):
         emb.add_field(name="Total Cache Size", value=sizeof_fmt(del_size + edit_size))
         emb.add_field(
             name="Cache Entries",
-            value="Snipes: {}\nEdits: {}".format(
-                sum(len(i) for i in self.deletecache.values()),
-                sum(len(i) for i in self.editcache.values()),
-            ),
+            value=f"Snipes: {sum(len(i) for i in self.deletecache.values())}\nEdits: {sum(len(i) for i in self.editcache.values())}",
         )
         emb.add_field(
             name="No track msgs (Dev stuff don't mind)",
@@ -481,9 +475,7 @@ class VerticalNavSource(menus.ListPageSource):
 class VertNavEmbMenus(menus.MenuPages, inherit_buttons=False):
     def _skip_single(self):
         max_pages = self._source.get_max_pages()
-        if max_pages is None:
-            return True
-        return max_pages == 1
+        return True if max_pages is None else max_pages == 1
 
     @menus.button("\N{UPWARDS BLACK ARROW}", skip_if=_skip_single)
     async def move_up(self, payload):

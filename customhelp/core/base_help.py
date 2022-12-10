@@ -44,12 +44,10 @@ class BaguetteHelp(commands.RedHelpFormatter):
         Handles parsing
         """
 
-        maybe_cog = ctx.bot.get_cog(help_for)
-        if maybe_cog:
+        if maybe_cog := ctx.bot.get_cog(help_for):
             return maybe_cog
 
-        maybe_cateory = get_category(help_for)
-        if maybe_cateory:
+        if maybe_cateory := get_category(help_for):
             return maybe_cateory
 
         alias = None
@@ -182,7 +180,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                 all_cog_text += cog_text
             all_cog_text = "\n".join(sorted(all_cog_text.split("\n")))
             title = obj.name.capitalize()
-            for i, page in enumerate(pagify(all_cog_text, page_length=500, shorten_by=0)):
+            for page in pagify(all_cog_text, page_length=500, shorten_by=0):
                 field = EmbedField(title, page, False)
                 emb["fields"].append(field)
                 title = EMPTY_STRING
@@ -257,8 +255,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
             emb["embed"]["description"] = signature
 
-            command_help = command.format_help_for_context(ctx)
-            if command_help:
+            if command_help := command.format_help_for_context(ctx):
                 splitted = command_help.split("\n\n")
                 name = splitted[0]
                 value = "\n\n".join(splitted[1:])
@@ -283,10 +280,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     for name, command in sorted(subcommands.items())
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
-                    if i == 0:
-                        title = _("**__Subcommands:__**")
-                    else:
-                        title = EMPTY_STRING
+                    title = _("**__Subcommands:__**") if i == 0 else EMPTY_STRING
                     field = EmbedField(title, page, False)
                     emb["fields"].append(field)
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
@@ -360,8 +354,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             "icon_url": ctx.me.avatar_url,
         }
         offset = len(author_info["name"]) + 20
-        foot_text = embed_dict["footer"]["text"]
-        if foot_text:
+        if foot_text := embed_dict["footer"]["text"]:
             offset += len(foot_text)
         offset += len(embed_dict["embed"]["description"])
         offset += len(embed_dict["embed"]["title"])
@@ -513,12 +506,16 @@ class BaguetteHelp(commands.RedHelpFormatter):
         """Applies blacklist to all the categories, Filters based on the current context"""
         blocklist = await self.config.blacklist()
         is_owner = await self.bot.is_owner(ctx.author)
-        final = []
-        for name in categories:
-            # This condition is made using a simple kmap.
+        return [
+            name
+            for name in categories
             if (
-                (ctx.channel.is_nsfw() if hasattr(ctx.channel, "is_nsfw") else True)
+                (
+                    ctx.channel.is_nsfw()
+                    if hasattr(ctx.channel, "is_nsfw")
+                    else True
+                )
                 or name not in blocklist["nsfw"]
-            ) and (is_owner or name not in blocklist["dev"]):
-                final.append(name)
-        return final
+            )
+            and (is_owner or name not in blocklist["dev"])
+        ]

@@ -125,7 +125,7 @@ class JustCore(ThemesMeta):
 
                 a_diff = len(aliases) - len(valid_alias_list)
                 aliases_list = [
-                    f"{ctx.clean_prefix}{command.parent.qualified_name + ' ' if command.parent else ''}{alias}"
+                    f"{ctx.clean_prefix}{f'{command.parent.qualified_name} ' if command.parent else ''}{alias}"
                     for alias in valid_alias_list
                 ]
                 if len(valid_alias_list) < 10:
@@ -165,9 +165,7 @@ class JustCore(ThemesMeta):
             if subcommands:
 
                 def shorten_line(a_line: str) -> str:
-                    if len(a_line) < 70:  # embed max width needs to be lower
-                        return a_line
-                    return a_line[:67] + "...**"
+                    return a_line if len(a_line) < 70 else f"{a_line[:67]}...**"
 
                 subtext = "\n".join(
                     shorten_line(f"`{name:<15}:` **{command.format_shortdoc_for_context(ctx)}**")

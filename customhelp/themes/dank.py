@@ -22,12 +22,12 @@ class DankHelp(ThemesMeta):
             for cat in filtered_categories:
                 if cat.cogs:
                     title = (
-                        str(cat.reaction) + " " if cat.reaction else ""
+                        f"{str(cat.reaction)} " if cat.reaction else ""
                     ) + cat.name.capitalize()
                     emb["fields"].append(
                         EmbedField(
                             title,
-                            f"`{ctx.clean_prefix}help {cat.name}`\n{cat.long_desc if cat.long_desc else ''}",
+                            f"`{ctx.clean_prefix}help {cat.name}`\n{cat.long_desc or ''}",
                             True,
                         )
                     )
@@ -74,9 +74,7 @@ class DankHelp(ThemesMeta):
             ]
 
             all_cog_text = ", ".join(all_cog_text)
-            for i, page in enumerate(
-                pagify(all_cog_text, page_length=1000, delims=[","], shorten_by=0)
-            ):
+            for page in pagify(all_cog_text, page_length=1000, delims=[","], shorten_by=0):
                 field = EmbedField(
                     EMPTY_STRING,
                     page[1:] if page.startswith(",") else page,
@@ -151,19 +149,14 @@ class DankHelp(ThemesMeta):
             if subcommands:
 
                 def shorten_line(a_line: str) -> str:
-                    if len(a_line) < 70:  # embed max width needs to be lower
-                        return a_line
-                    return a_line[:67] + ".."
+                    return a_line if len(a_line) < 70 else f"{a_line[:67]}.."
 
                 subtext = "\n" + "\n".join(
                     shorten_line(f"`{name:<15}:`{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(subcommands.items())
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
-                    if i == 0:
-                        title = _("**__Subcommands:__**")
-                    else:
-                        title = _(EMPTY_STRING)
+                    title = _("**__Subcommands:__**") if i == 0 else _(EMPTY_STRING)
                     field = EmbedField(title, page, False)
                     emb["fields"].append(field)
 

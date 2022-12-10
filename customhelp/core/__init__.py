@@ -62,6 +62,4 @@ def get_menu():
         except RuntimeError:
             # User unloaded slashtags, so fallback to normal menu
             pass
-    if use_replies:
-        return ReplyMenus
-    return NoReplyMenus
+    return ReplyMenus if use_replies else NoReplyMenus

@@ -51,7 +51,7 @@ async def evaluate(ctx, a_string: str, b_string: str, time_taken, dm_id, author_
         return
     else:
         mistakes = 0
-        for i, s in enumerate(ndiff(a_string, b_string)):
+        for s in ndiff(a_string, b_string):
             if s[0] == " ":
                 continue
             elif s[0] in ["-", "+"]:

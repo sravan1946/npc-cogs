@@ -261,13 +261,13 @@ class CustomHelp(commands.Cog):
             "buttons": "Use buttons",
             "deletemessage": "Delete user msg",
         }
-        other_settings = []
-        # url doesnt exist now, that's why the check. sorry guys.
-        for i, j in settings.items():
-            if i in setting_mapping:
-                other_settings.append(f"`{setting_mapping[i]:<15}`: {j}")
+        other_settings = [
+            f"`{setting_mapping[i]:<15}`: {j}"
+            for i, j in settings.items()
+            if i in setting_mapping
+        ]
         val = await self.config.theme()
-        val = "\n".join([f"`{i:<10}`: " + (j if j else "default") for i, j in val.items()])
+        val = "\n".join([f"`{i:<10}`: " + (j or "default") for i, j in val.items()])
         emb = discord.Embed(
             title="Custom help settings",
             description=f"Cog Version: {self.__version__}",
@@ -450,18 +450,17 @@ class CustomHelp(commands.Cog):
         available_categories.pop(-1)
         # special naming for uncategorized stuff
         uncat_name = GLOBAL_CATEGORIES[-1].name
-        already_present_emojis = list(
+        already_present_emojis = [
             str(i.reaction) for i in GLOBAL_CATEGORIES if i.reaction
-        ) + list(ARROWS.values())
+        ] + list(ARROWS.values())
         failed = []  # example: [('desc','categoryname')]
 
         def validity_checker(category, item):
             """Returns the thing needs to be saved on config if valid, else None"""
             if item[0] in check:
                 if item[0] == "name":
-                    if not (item[1] in available_categories):
+                    if item[1] not in available_categories:
                         return item[1]
-                # dupe emoji and valid emoji?
                 elif item[0] == "reaction":
                     if item[1] not in already_present_emojis:
                         return str(emoji_converter(self.bot, item[1]))
@@ -498,17 +497,13 @@ class CustomHelp(commands.Cog):
                     for name, value in to_config[ind]:
                         conf_cat[ind][name] = value
 
-        for page in pagify(
-            "Successfully added the edits"
-            if not failed
-            else "The following things failed:\n"
+        for page in pagify("The following things failed:\n"
             + "\n".join(
                 [
                     f"`{reason[0]}`: {reason[1]}  failed in `{category}`"
                     for reason, category in failed
                 ]
-            )
-        ):
+            ) if failed else "Successfully added the edits"):
             await ctx.send(page)
         await self.refresh_cache()
 
@@ -849,9 +844,9 @@ class CustomHelp(commands.Cog):
             except asyncio.TimeoutError:
                 return await ctx.send("Timed out, please try again.")
 
-        already_present_emojis = list(
+        already_present_emojis = [
             str(i.reaction) for i in GLOBAL_CATEGORIES if i.reaction
-        ) + list((await self.config.settings.arrows()).values())
+        ] + list((await self.config.settings.arrows()).values())
 
         async def emj_parser(data):
             parsed = {}
@@ -899,13 +894,12 @@ class CustomHelp(commands.Cog):
                 return await ctx.send(
                     "This category contains Core cog and shouldn't be hidden under any circumstances"
                 )
-            else:
-                async with self.config.blacklist.nsfw() as conf:
-                    if category not in conf:
-                        conf.append(category)
-                        await ctx.send(f"Successfully added {category} to nsfw category")
-                    else:
-                        await ctx.send(f"{category} is already present in nsfw blocklist")
+            async with self.config.blacklist.nsfw() as conf:
+                if category in conf:
+                    await ctx.send(f"{category} is already present in nsfw blocklist")
+                else:
+                    conf.append(category)
+                    await ctx.send(f"Successfully added {category} to nsfw category")
         else:
             await ctx.send("Invalid category name")
 
@@ -937,13 +931,12 @@ class CustomHelp(commands.Cog):
                 return await ctx.send(
                     "This category contains Core cog and shouldn't be hidden under any circumstances"
                 )
-            else:
-                async with self.config.blacklist.dev() as conf:
-                    if category not in conf:
-                        conf.append(category)
-                        await ctx.send(f"Successfully added {category} to dev list")
-                    else:
-                        await ctx.send(f"{category} is already present in dev list")
+            async with self.config.blacklist.dev() as conf:
+                if category in conf:
+                    await ctx.send(f"{category} is already present in dev list")
+                else:
+                    conf.append(category)
+                    await ctx.send(f"Successfully added {category} to dev list")
         else:
             await ctx.send("Invalid category name")
 

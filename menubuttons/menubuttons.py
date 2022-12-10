@@ -87,7 +87,7 @@ class MenuButtons(MenuMixin, commands.Cog):
                 def_ctrls[valid_emoji] = self.map_conf_arrows[name]
             else:
                 def_ctrls[self.default_arrows[name]] = self.map_conf_arrows[name]
-                log.warn("The {} arrow emoji {} is not found by the bot".format(name, emoji))
+                log.warn(f"The {name} arrow emoji {emoji} is not found by the bot")
 
     def cog_unload(self):
         if self._init_task is not None:
@@ -115,10 +115,7 @@ class MenuButtons(MenuMixin, commands.Cog):
     async def toggle(self, ctx, toggle: bool):
         """Toggle between button menus and normal red ones"""
         await self.config.toggle.set(toggle)
-        if toggle:
-            menus.menu = self.new_button_menu
-        else:
-            menus.menu = self.old_menu
+        menus.menu = self.new_button_menu if toggle else self.old_menu
         await ctx.send(f"Sucessfully {'en' if toggle else 'dis'}abled button menus")
 
     @buttons.command()
@@ -227,17 +224,13 @@ class MenuButtons(MenuMixin, commands.Cog):
                         arrow.update(modified_values)
                         break
 
-        for page in pagify(
-            "Successfully added the edits"
-            if not failed
-            else "The following things failed:\n"
+        for page in pagify("The following things failed:\n"
             + "\n".join(
                 [
                     f"`{reason[0]}` failed in `{arrow}`, `Reason: {reason[1]}`"
                     for reason, arrow in failed
                 ]
-            )
-        ):
+            ) if failed else "Successfully added the edits"):
             await ctx.send(page)
         await self.refresh_arrows()
 

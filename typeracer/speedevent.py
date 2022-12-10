@@ -13,7 +13,7 @@ class Speedevent:
         self.ctx = ctx
         self.countdown = countdown
         self.settings = settings
-        self.joined = {ctx.author.id: ctx.author.display_name} if not all else dict()
+        self.joined = {} if all else {ctx.author.id: ctx.author.display_name}
         self.tasks = {}
         self.event_started = False
         self.leaderboard = []
@@ -101,12 +101,14 @@ class Speedevent:
             [f"{index}. {self.joined[user]}" for index, user in enumerate(self.joined, 1)]
         )
         countdown = await self.ctx.send(
-            f"A Typing speed test event will commence in {self.countdown} seconds\n"
-            + (
-                f" Type `{self.ctx.prefix}speedevent join` to enter the race\n "
-                + f"Joined Users:\n{active}"
-                if not self.all
-                else ""
+            (
+                f"A Typing speed test event will commence in {self.countdown} seconds\n"
+                + (
+                    ""
+                    if self.all
+                    else f" Type `{self.ctx.prefix}speedevent join` to enter the race\n "
+                    + f"Joined Users:\n{active}"
+                )
             )
         )
         await asyncio.sleep(5)
@@ -115,12 +117,14 @@ class Speedevent:
                 [f"{index}. {self.joined[user]}" for index, user in enumerate(self.joined, 1)]
             )
             await countdown.edit(
-                content=f"A Typing speed test event will commence in {i} seconds\n"
-                + (
-                    f" Type `{self.ctx.prefix}speedevent join` to enter the race\n "
-                    + f"Joined Users:\n{active}"
-                    if not self.all
-                    else ""
+                content=(
+                    f"A Typing speed test event will commence in {i} seconds\n"
+                    + (
+                        ""
+                        if self.all
+                        else f" Type `{self.ctx.prefix}speedevent join` to enter the race\n "
+                        + f"Joined Users:\n{active}"
+                    )
                 )
             )
             await asyncio.sleep(5)
@@ -157,10 +161,8 @@ class Speedevent:
                 if not self.all and len(self.joined) == 0:
                     break
 
-        try:
+        with contextlib.suppress(asyncio.TimeoutError):
             await asyncio.wait_for(runner(), timeout=180)
-        except asyncio.TimeoutError:
-            pass
 
     async def sticky(self, text):
         content = ("Remaing time: 180 seconds\n" if self.all else "") + text

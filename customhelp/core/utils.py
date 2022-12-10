@@ -27,9 +27,7 @@ def emoji_converter(bot, emoji):
 
 # Taken from the core help as well :)
 def shorten_line(a_line: str) -> str:
-    if len(a_line) < 70:  # embed max width needs to be lower
-        return a_line
-    return a_line[:67] + "...**"
+    return a_line if len(a_line) < 70 else f"{a_line[:67]}...**"
 
 
 # Add permissions
@@ -49,7 +47,7 @@ def get_perms(command):
 
     if perms := getattr(command.requires, "bot_perms"):
         if perms_list := ", ".join(neat_format(i) for i, j in perms if j):
-            final_perms += "**Bot:** " + perms_list
+            final_perms += f"**Bot:** {perms_list}"
 
     return final_perms
 
@@ -89,9 +87,7 @@ def _skip_single_arrows(self):
 
 def _skip_double_triangle_buttons(self):
     max_pages = self._source.get_max_pages()
-    if max_pages is None:
-        return True
-    return max_pages <= 2
+    return True if max_pages is None else max_pages <= 2
 
 
 async def react_page(ctx, emoji, help_settings, bypass_checks=False):

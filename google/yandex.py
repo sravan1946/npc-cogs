@@ -18,9 +18,7 @@ class Yandex:
     async def yandex_reverse(self, ctx, *, url: str = None):
         """Attach or paste the url of an image to reverse search, or reply to a message which has the image/embed with the image"""
 
-        if query := get_query(ctx, url):
-            pass
-        else:
+        if not (query := get_query(ctx, url)):
             return await ctx.send_help()
 
         encoded = {
@@ -50,10 +48,7 @@ class Yandex:
         }
 
         async with ctx.typing():
-            async with self.session.get(
-                "https://yandex.com/images/search?" + urllib.parse.urlencode(encoded),
-                headers=self.options,
-            ) as resp:
+            async with self.session.get(f"https://yandex.com/images/search?{urllib.parse.urlencode(encoded)}", headers=self.options) as resp:
                 text = await resp.read()
                 await ctx.send(text)
                 redir_url = resp.url

@@ -25,11 +25,10 @@ class Weeb(commands.Cog):
         """Replies with UwU variant emoticons\n
         `[p]uwu c` - deletes your message"""
         if option == "c":
-            if ctx.channel.permissions_for(ctx.me).manage_messages:
-                with contextlib.suppress(NotFound):
-                    await ctx.message.delete()
-            else:
+            if not ctx.channel.permissions_for(ctx.me).manage_messages:
                 raise commands.BotMissingPermissions(discord.Permissions(manage_messages=True))
+            with contextlib.suppress(NotFound):
+                await ctx.message.delete()
         await ctx.send(choice(self.uwu))
 
     @commands.command()
@@ -37,11 +36,10 @@ class Weeb(commands.Cog):
         """Replies with OwO variant emoticons
         `[p]owo c` - deletes your message"""
         if option == "c":
-            if ctx.channel.permissions_for(ctx.me).manage_messages:
-                with contextlib.suppress(NotFound):
-                    await ctx.message.delete()
-            else:
+            if not ctx.channel.permissions_for(ctx.me).manage_messages:
                 raise commands.BotMissingPermissions(discord.Permissions(manage_messages=True))
+            with contextlib.suppress(NotFound):
+                await ctx.message.delete()
         await ctx.send(choice(self.owo))
 
     @commands.command()
@@ -49,11 +47,10 @@ class Weeb(commands.Cog):
         """Replies with flower girl/yandere girl
         `[p]xwx c` - deletes your message"""
         if option == "c":
-            if ctx.channel.permissions_for(ctx.me).manage_messages:
-                with contextlib.suppress(NotFound):
-                    await ctx.message.delete()
-            else:
+            if not ctx.channel.permissions_for(ctx.me).manage_messages:
                 raise commands.BotMissingPermissions(discord.Permissions(manage_messages=True))
+            with contextlib.suppress(NotFound):
+                await ctx.message.delete()
         await ctx.send(choice(self.xwx))
 
     async def red_get_data_for_user(self, *, user_id: int):

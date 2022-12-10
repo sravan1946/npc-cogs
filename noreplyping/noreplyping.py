@@ -49,38 +49,40 @@ class NoReplyPing(commands.Cog):
                 if any(member.id == ref_message.author.id for member in message.mentions):
                     # User pinged them
                     return
-                else:
-                    if ref_message.author and ref_message.author.id != message.author.id:
-                        if await self.config.member_from_ids(
-                            message.guild.id, ref_message.author.id
-                        ).send_dms():
-                            # wait for 60 seconds before sending dm, so as to not annoy when chatting
-                            try:
-                                await self.bot.wait_for(
-                                    "message",
-                                    timeout=60,
-                                    check=lambda msg: msg.author.id == ref_message.author.id
-                                    and msg.channel.id == message.channel.id,
-                                )
-                            except asyncio.TimeoutError:
-                                emb = discord.Embed(
-                                    title=f"Reply from {message.author}",
-                                    color=await self.bot.get_embed_color(
-                                        self.fake_obj(message.guild)  # type:ignore
-                                    ),
-                                )
-                                emb.description = message.content
-                                emb.add_field(
-                                    name="Your message",
-                                    value=ref_message.content[:1024],
-                                    inline=False,
-                                )
-                                emb.add_field(
-                                    name="Reply message Link",
-                                    value=f"[Click Here]({message.jump_url})",
-                                )
-                                emb.timestamp = datetime.datetime.utcnow()
-                                await ref_message.author.send(embed=emb)
+                if (
+                    ref_message.author
+                    and ref_message.author.id != message.author.id
+                    and await self.config.member_from_ids(
+                        message.guild.id, ref_message.author.id
+                    ).send_dms()
+                ):
+                    # wait for 60 seconds before sending dm, so as to not annoy when chatting
+                    try:
+                        await self.bot.wait_for(
+                            "message",
+                            timeout=60,
+                            check=lambda msg: msg.author.id == ref_message.author.id
+                            and msg.channel.id == message.channel.id,
+                        )
+                    except asyncio.TimeoutError:
+                        emb = discord.Embed(
+                            title=f"Reply from {message.author}",
+                            color=await self.bot.get_embed_color(
+                                self.fake_obj(message.guild)  # type:ignore
+                            ),
+                        )
+                        emb.description = message.content
+                        emb.add_field(
+                            name="Your message",
+                            value=ref_message.content[:1024],
+                            inline=False,
+                        )
+                        emb.add_field(
+                            name="Reply message Link",
+                            value=f"[Click Here]({message.jump_url})",
+                        )
+                        emb.timestamp = datetime.datetime.utcnow()
+                        await ref_message.author.send(embed=emb)
 
     @commands.guild_only()  # type:ignore
     @commands.group(invoke_without_command=True, aliases=["nrp"])

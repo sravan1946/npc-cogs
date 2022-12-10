@@ -86,7 +86,7 @@ class Blocks(ThemesMeta):
         if await ctx.embed_requested():
             emb = await self.embed_template(help_settings, ctx)
             if description:
-                emb["embed"]["description"] = "**" + description + "**"
+                emb["embed"]["description"] = f"**{description}**"
             if coms:
                 for page in pagify(cmd_list, page_length=998, shorten_by=0):
                     emb["fields"].append(EmbedField(EMPTY_STRING, box(page), False))
