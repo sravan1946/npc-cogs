@@ -43,7 +43,7 @@ class JustCore(ThemesMeta):
             for cog_name, data in coms:
                 title = f"**__{cog_name}:__**"
                 cog_text = "\n".join(
-                    shorten_line(f"**{name}** {command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name:<15}:` **{command.format_shortdoc_for_context(ctx)}**")
                     for name, command in sorted(data.items())
                 )
 
@@ -77,7 +77,7 @@ class JustCore(ThemesMeta):
 
             if coms:
                 command_text = "\n".join(
-                    shorten_line(f"**{name}** {command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name:<15}:` **{command.format_shortdoc_for_context(ctx)}**")
                     for name, command in sorted(coms.items())
                 )
                 for i, page in enumerate(pagify(command_text, page_length=500, shorten_by=0)):
@@ -163,23 +163,23 @@ class JustCore(ThemesMeta):
             if description := command.description:
                 emb["embed"]["title"] = f"{description[:250]}"
 
-            emb["embed"]["description"] = box(signature, "yml")
+            emb["embed"]["description"] = box(signature, lang="properties")
 
             if final_perms := get_perms(command):
-                emb["fields"].append(EmbedField("Permissions", final_perms, False))
+                emb["fields"].append(EmbedField("**__Permissions__**", final_perms, False))
 
             if cooldowns := get_cooldowns(command):
-                emb["fields"].append(EmbedField("Cooldowns:", "\n".join(cooldowns), False))
+                emb["fields"].append(EmbedField("**__Cooldowns__**:", "\n".join(cooldowns), False))
 
             if subcommands:
 
                 def shorten_line(a_line: str) -> str:
                     if len(a_line) < 70:  # embed max width needs to be lower
                         return a_line
-                    return a_line[:67] + "..."
+                    return a_line[:67] + "...**"
 
                 subtext = "\n".join(
-                    shorten_line(f"**{name}** {command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name:<15}:` **{command.format_shortdoc_for_context(ctx)}**")
                     for name, command in sorted(subcommands.items())
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):

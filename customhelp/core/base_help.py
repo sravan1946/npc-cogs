@@ -9,6 +9,7 @@ import discord
 from redbot.core import commands
 from redbot.core.commands.commands import Command
 from redbot.core.commands.context import Context
+
 from redbot.core.commands.help import HelpSettings, NoCommand, NoSubCommand, _, dpy_commands
 from redbot.core.utils.chat_formatting import pagify
 from redbot.core.utils.mod import mass_purge
@@ -22,6 +23,7 @@ from customhelp.core.views import (
 
 from . import ARROWS, GLOBAL_CATEGORIES
 from .category import Category, get_category
+
 from .dpy_menus import BaseMenu, arrow_react, home_react, react_page
 from .utils import (
     get_aliases,
@@ -260,7 +262,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         description = command.description or ""
 
         signature = _(
-            "`Syntax: {ctx.clean_prefix}{command.qualified_name} {command.signature}`"
+            "```yaml\nSyntax: {ctx.clean_prefix}{command.qualified_name} {command.signature}\n```"
         ).format(ctx=ctx, command=command)
         subcommands = None
 
