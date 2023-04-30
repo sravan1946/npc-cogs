@@ -28,7 +28,7 @@ from .core.views import ComponentType, MenuPicker, MenuView
 
 _ = Translator("CustomHelp", __file__)
 
-# Swtichable alphabetic ordered display
+# Switchable alphabetic ordered display
 # Crowdin stuff ;-;
 # Generating every category page on format_bot_help so as to save time in reaction stuff?
 # No need to fetch config uncat, when u can use global cache, but is that better?
@@ -280,7 +280,7 @@ class CustomHelp(commands.Cog):
                         data[k] = [i.lower() for i in tmp["tags"]] if "tags" in tmp else []
                     except json.JSONDecodeError:
                         # TODO Implement logger you lazy bum <_<
-                        print("[ERROR] Invaild JSON in cog {}".format(k))
+                        print(f"[ERROR] Invalid JSON in cog {k}")
                         data[k] = []
 
             else:
@@ -370,10 +370,10 @@ class CustomHelp(commands.Cog):
         async with ctx.typing():
             try:
                 if setval:
-                    # TODO potiential save a config call?
+                    # TODO potential save a config call?
                     await self.config.settings.set_formatter.set(True)
                     await self._setup()
-                    await ctx.send("Fomatter set to custom")
+                    await ctx.send("Formatter set to custom")
                 else:
                     await self.config.settings.set_formatter.set(False)
                     self.bot.reset_help_formatter()
@@ -388,7 +388,7 @@ class CustomHelp(commands.Cog):
             content = yaml_txt
         else:
             await ctx.send(
-                "Your next message should be a yaml with the specfied format as in the docs\n"
+                "Your next message should be a yaml with the specified format as in the docs\n"
                 "Example:\n"
                 "category1:\n"
                 " - Cog1\n - Cog2"
@@ -604,14 +604,15 @@ class CustomHelp(commands.Cog):
             _("Set Categories:\n") if len(available_categories_raw) > 1 else _("Set Category:\n")
         )
         for category in available_categories_raw:
-            joined += "+ {}:\n".format(category["name"])
+            joined += f"+ {category['name']}:\n"
             for cog in sorted(category["cogs"]):
                 joined += "  - {}\n".format(cog)
         joined += "\n+ {}: (This is where the uncategorised cogs go in)\n".format(
             GLOBAL_CATEGORIES.uncategorised.name
         )
+
         for name in sorted(uncategorised):
-            joined += "  - {}\n".format(name)
+            joined += f"  - {name}\n"
         for page in pagify(joined, ["\n"], shorten_by=16):
             await ctx.send(box(page.lstrip(" "), lang="diff"))
 
@@ -749,7 +750,7 @@ class CustomHelp(commands.Cog):
 
     @remove.command(aliases=["categories", "cat"], require_var_positional=True)
     async def category(self, ctx, *categories: str):
-        """Remove a multiple categories"""
+        """Remove multiple categories"""
         # from [p]load
         category_names = set(map(lambda cat: cat.rstrip(","), categories))
 
@@ -784,7 +785,7 @@ class CustomHelp(commands.Cog):
             await self.config.UNCAT_INDEX.set(GLOBAL_CATEGORIES.UNCAT_INDEX + change_uncat_index)
 
         text += (
-            _("Sucessfully removed: ") + (", ".join(map(lambda x: all_cat[x], to_config)) + "\n")
+            _("Successfully removed: ") + (", ".join(map(lambda x: all_cat[x], to_config)) + "\n")
             if to_config
             else ""
         )
@@ -926,6 +927,7 @@ class CustomHelp(commands.Cog):
         """Delete the user message that started the help menu.
         Note: This only works if the bot has permissions to delete the user message, otherwise it's supressed"""
         await self.config.settings.deletemessage.set(toggle)
+
         self._update_conf("settings", "deletemessage", toggle)
         await ctx.send(f"Sucessfully set delete user toggle to {toggle}")
 
