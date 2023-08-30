@@ -127,7 +127,7 @@ class Snipe(commands.Cog):
     async def snipe(
         self,
         ctx: commands.Context,
-        channel: discord.TextChannel = None,
+        channel: Optional[discord.TextChannel],
         index: int = None,
     ):
         """
@@ -269,7 +269,6 @@ class Snipe(commands.Cog):
                     entries=entries,
                     per_page=1,
                 ),
-                delete_message_after=True,
             )
             await menu.start(ctx)
             self.notrack.add(menu.message.id)
