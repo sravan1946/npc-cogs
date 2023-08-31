@@ -23,7 +23,6 @@ class DankHelp(ThemesMeta):
     async def format_bot_help(
         self, ctx: Context, help_settings: HelpSettings, get_pages: bool = False
     ):
-
         if await ctx.embed_requested():
             emb = await self.embed_template(help_settings, ctx)
             description = ctx.bot.description or ""
