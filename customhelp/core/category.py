@@ -12,6 +12,7 @@ class Category:
     name: str
     desc: str
     cogs: list
+    is_uncat: bool = False
     reaction: Optional[str] = None
     long_desc: Optional[str] = None
     thumbnail: Optional[str] = None
