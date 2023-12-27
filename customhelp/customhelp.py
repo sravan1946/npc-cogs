@@ -28,7 +28,7 @@ from .core.views import ComponentType, MenuPicker, MenuView
 
 _ = Translator("CustomHelp", __file__)
 
-# Switchable alphabetic ordered display
+# Swtichable alphabetic ordered display
 # Crowdin stuff ;-;
 # Generating every category page on format_bot_help so as to save time in reaction stuff?
 # No need to fetch config uncat, when u can use global cache, but is that better?
@@ -281,7 +281,7 @@ class CustomHelp(commands.Cog):
                         data[k] = [i.lower() for i in tmp["tags"]] if "tags" in tmp else []
                     except json.JSONDecodeError:
                         # TODO Implement logger you lazy bum <_<
-                        print(f"[ERROR] Invalid JSON in cog {k}")
+                        print("[ERROR] Invaild JSON in cog {}".format(k))
                         data[k] = []
 
             else:
@@ -371,7 +371,7 @@ class CustomHelp(commands.Cog):
         async with ctx.typing():
             try:
                 if setval:
-                    # TODO potential save a config call?
+                    # TODO potiential save a config call?
                     await self.config.settings.set_formatter.set(True)
                     await self.cog_load()
                     await ctx.send("Fomatter set to custom")
@@ -389,7 +389,7 @@ class CustomHelp(commands.Cog):
             content = yaml_txt
         else:
             await ctx.send(
-                "Your next message should be a yaml with the specified format as in the docs\n"
+                "Your next message should be a yaml with the specfied format as in the docs\n"
                 "Example:\n"
                 "category1:\n"
                 " - Cog1\n - Cog2"

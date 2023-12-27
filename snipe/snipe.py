@@ -127,7 +127,7 @@ class Snipe(commands.Cog):
     async def snipe(
         self,
         ctx: commands.Context,
-        channel: Optional[discord.TextChannel],
+        channel: discord.TextChannel = None,
         index: int = None,
     ):
         """
@@ -163,35 +163,6 @@ class Snipe(commands.Cog):
             await menu.start(ctx)
         else:
             return await ctx.send("Nothing to snipe")
-
-    @snipe.command(name="search")
-    async def snipe_search(self, ctx, *, text):
-        """search through the history of deleted/edited messages"""
-        # TODO remove redundant code
-        if self.deletecache[ctx.channel.id]:
-            lower_text = text.lower()
-            user_msgs = [
-                msg
-                for msg in reversed(self.deletecache[ctx.channel.id])
-                if (msg.content and lower_text in msg.content.lower())
-                or (msg.embed and lower_text in str(msg.embed.to_dict()).lower())
-            ]
-            if user_msgs:
-                menu = menus.MenuPages(
-                    source=MsgSource(
-                        template_emb=discord.Embed(color=await ctx.embed_color()),
-                        entries=user_msgs,
-                        per_page=1,
-                    ),
-                    delete_message_after=True,
-                )
-                await menu.start(ctx)
-                if len(user_msgs) > 1:
-                    self.notrack.add(menu.message.id)
-            else:
-                await ctx.send("No snipe'd messages found for the given search text")
-        else:
-            await ctx.send("Nothing to snipe")
 
     @snipe.command(name="user")
     async def snipe_user(
@@ -261,14 +232,14 @@ class Snipe(commands.Cog):
         pre_check = await self.pre_check_perms(ctx, channel)
         if not pre_check:
             return
-        entries = [msg for msg in reversed(self.deletecache[channel.id]) if msg.content]
-        if entries:
+        if self.deletecache[channel.id]:
             menu = menus.MenuPages(
                 source=MsgSource(
                     template_emb=discord.Embed(color=await ctx.embed_color()),
-                    entries=entries,
+                    entries=[msg for msg in reversed(self.deletecache[channel.id]) if msg.content],
                     per_page=1,
                 ),
+                delete_message_after=True,
             )
             await menu.start(ctx)
             self.notrack.add(menu.message.id)
@@ -349,10 +320,9 @@ class Snipe(commands.Cog):
         pre_check = await self.pre_check_perms(ctx, channel)
         if not pre_check:
             return
-        entries = [msg for msg in reversed(self.editcache[channel.id]) if msg.content]
-        if entries:
+        if self.editcache[channel.id]:
             menu = HorizontalEditMenus(
-                source=entries,
+                source=[msg for msg in reversed(self.editcache[channel.id]) if msg.content],
                 delete_message_after=True,
             )
             await menu.start(ctx)

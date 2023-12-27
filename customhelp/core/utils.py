@@ -26,7 +26,7 @@ def emoji_converter(bot, emoji) -> Optional[str]:
 def shorten_line(a_line: str) -> str:
     if len(a_line) < 70:  # embed max width needs to be lower
         return a_line
-    return a_line[:67] + "...**"
+    return a_line[:67] + "..."
 
 
 # Add permissions
@@ -42,11 +42,11 @@ def get_perms(command):
             user_perms.append(neat_format(perms.name))
 
     if user_perms:
-        final_perms += "**User:** " + ", ".join(user_perms) + "\n"
+        final_perms += "User Permission(s): " + ", ".join(user_perms) + "\n"
 
     if perms := getattr(command.requires, "bot_perms"):
         if perms_list := ", ".join(neat_format(i) for i, j in perms if j):
-            final_perms += "**Bot:** " + perms_list
+            final_perms += "Bot Permission(s): " + perms_list
 
     return final_perms
 

@@ -26,21 +26,14 @@ class Google(Yandex, commands.Cog):
     A Simple google search with image support as well
     """
 
-    __version__ = "0.0.4"
+    __version__ = "0.0.3"
     __authors__ = ["epic guy", "ow0x", "fixator10"]
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
         self.options = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
             "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-            "upgrade-insecure-requests": "1",
-            "sec-ch-arch": "x86",
-            "accept-encoding": "gzip, deflate",
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "sec-ch-viewport-width": "1920",
-            "sec-ch-bitness": "32",
-            
         }
         self.link_regex = re.compile(
             r"https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*(?:\.png|\.jpe?g|\.gif))"
@@ -310,7 +303,7 @@ class Google(Yandex, commands.Cog):
             else:
                 await ctx.send("No result")
 
-    @google.command(aliases=["rev"], enabled=False)
+    @google.command(aliases=["rev"])
     async def reverse(self, ctx, *, url: str = None):
         """Attach or paste the url of an image to reverse search, or reply to a message which has the image/embed with the image"""
         isnsfw = nsfwcheck(ctx)
@@ -428,7 +421,7 @@ class Google(Yandex, commands.Cog):
         if cards:
             get_card(soup, final, kwargs)
 
-        for res in soup.select("div.g.tF2Cxc"):
+        for res in soup.findAll("div", class_="g"):
             if name := res.find("div", class_="yuRUbf"):
                 url = name.a["href"]
                 if title := name.find("h3", class_=re.compile("LC20lb")):
