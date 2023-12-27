@@ -2,9 +2,9 @@ name: Run pre-commit
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   run_precommit:
@@ -34,7 +34,7 @@ jobs:
       - name: Register problem matchers
         run: |
           echo "::add-matcher::.github/workflows/matchers/check-json.json"
-          
+
       # Run pre-commit
       - name: Run pre-commit
         run: |
