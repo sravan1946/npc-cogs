@@ -45,7 +45,7 @@ class Speak(commands.Cog):
         hook = await self.get_hook(channel)
         await hook.send(
             username=ctx.author.display_name,
-            avatar_url=ctx.author.avatar_url,
+            avatar_url=ctx.author.avatar.url,
             content=sentence,
         )
 
