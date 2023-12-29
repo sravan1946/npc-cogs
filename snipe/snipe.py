@@ -93,7 +93,7 @@ class Snipe(commands.Cog):
             ):
                 self.deletecache[message.channel.id].append(MiniMsg(message))
         else:
-            self.notrack.remove(message.id)
+            self.notrack.discard(message.id)
 
     @commands.Cog.listener()
     async def on_message_edit(self, old_msg, new_msg):
@@ -114,12 +114,11 @@ class Snipe(commands.Cog):
         user_perms = channel.permissions_for(ctx.author)
         if user_perms.read_messages and user_perms.read_message_history:
             return True
-        else:
-            await ctx.reply(
-                f"{ctx.author.name}, you don't have read access to {channel.mention}",
-                mention_author=False,
-            )
-            return False
+        await ctx.reply(
+            f"{ctx.author.name}, you don't have read access to {channel.mention}",
+            mention_author=False,
+        )
+        return False
 
     @commands.guild_only()
     @commands.group(invoke_without_command=True)
@@ -197,7 +196,7 @@ class Snipe(commands.Cog):
                 if len(user_msgs) > 1:
                     self.notrack.add(menu.message.id)
             else:
-                await ctx.send("No snipe'd messages found for the user " + str(user))
+                await ctx.send(f"No snipe'd messages found for the user {str(user)}")
         else:
             await ctx.send("Nothing to snipe")
 
