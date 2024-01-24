@@ -161,7 +161,7 @@ class CustomHelp(commands.Cog):
             # Doesn't work cause force_registration=True
             # uncat_conf = await self.config.uncategorised()
             uncat_obj = Category(
-                name="uncategorised‎", desc="Miscellaneous cogs", cogs=[], is_uncat=True
+                name="uncategorised", desc="Miscellaneous cogs", cogs=[], is_uncat=True
             )
             async with self.config.categories() as conf_cat:
                 conf_cat.append(uncat_obj.to_dict())
@@ -552,7 +552,7 @@ class CustomHelp(commands.Cog):
             if (
                 category_name in available_categories
                 or category_name == uncat_name
-                or (category_name == "uncategorised" and uncat_name == "uncategorised‎")
+                or (category_name == "uncategorised" and uncat_name == "uncategorised")
             ):
                 to_config[category_name] = {}
 
@@ -763,7 +763,7 @@ class CustomHelp(commands.Cog):
                 # Uncategorised Name
                 if given_category == GLOBAL_CATEGORIES.uncategorised.name or (
                     given_category == "uncategorised"
-                    and GLOBAL_CATEGORIES.uncategorised.name == "uncategorised‎"
+                    and GLOBAL_CATEGORIES.uncategorised.name == "uncategorised"
                 ):
                     text += _(
                         "You can't remove {} cause it is where the uncategorised cogs go into\n\n"
