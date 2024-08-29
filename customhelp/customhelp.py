@@ -60,7 +60,7 @@ class CustomHelp(commands.Cog):
     A custom customisable help for fun and profit
     """
 
-    __version__ = "1.1.1"
+    __version__ = "2.1.1"
 
     def __init__(self, bot: Red):
         self.bot = bot

@@ -26,7 +26,7 @@ def emoji_converter(bot, emoji) -> Optional[str]:
 def shorten_line(a_line: str, thbnail=False) -> str:
     # TODO for now if thumbnail is present,
     # we'll just return the line as is
-    accepted_len = 140 if thbnail else 70
+    accepted_len = 138 if thbnail else 68
     if len(a_line) < accepted_len:  # embed max width needs to be lower
         return a_line
 
@@ -36,7 +36,7 @@ def shorten_line(a_line: str, thbnail=False) -> str:
             final_word += word + " "
         else:
             break
-    return final_word.rstrip() + " …"
+    return final_word.rstrip() + " …**"
 
 
 # Add permissions
